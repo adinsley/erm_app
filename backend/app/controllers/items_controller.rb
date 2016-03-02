@@ -13,7 +13,7 @@ class ItemsController < ApplicationController
   # GET /items/1.json
   def show
    
-    render :json => @item
+   render status: 200, :json => @item
 
   end
 
@@ -35,9 +35,10 @@ class ItemsController < ApplicationController
         @item = Item.new(item_params)
         if @item.save
         @items = Item.all
-        render status: 200, :json => @items, :include =>[{:location =>{:except=>[:id, :created_at, :updated_at]}}, {:food =>{:except =>[:id, :created_at, :updated_at]}}], :except => [:created_at, :updated_at, :food_id, :location_id]
+        render status: 201, :json => @item
+       
         else
-          render status: 404,  json: { message: "Data Invalid"}.to_json
+          render status: 404,  json: { message: @item.errors}.to_json
         end
     
     

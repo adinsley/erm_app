@@ -10,6 +10,8 @@ FactoryGirl.define do
     onload_year "2016"
     onload_week "1"
     onload_day "Sunday"
+    food_id "1"
+    location_id "1"
 
   end
 
