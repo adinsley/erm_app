@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @location.name %>
+</p>
+
+<p>
+  <strong>Deck:</strong>
+  <%= @location.deck %>
+</p>
+
+<p>
+  <strong>Position:</strong>
+  <%= @location.position %>
+</p>
+
+<p>
+  <strong>Rack:</strong>
+  <%= @location.rack %>
+</p>
+
+<p>
+  <strong>Store type:</strong>
+  <%= @location.store_type %>
+</p>
+
+<%= link_to 'Edit', edit_location_path(@location) %> |
+<%= link_to 'Back', locations_path %>

@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Food:</strong>
+  <%= @item.food %>
+</p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @item.location %>
+</p>
+
+<p>
+  <strong>Best before:</strong>
+  <%= @item.best_before %>
+</p>
+
+<p>
+  <strong>Onload date:</strong>
+  <%= @item.onload_date %>
+</p>
+
+<p>
+  <strong>Onload by:</strong>
+  <%= @item.onload_by %>
+</p>
+
+<p>
+  <strong>Offload date:</strong>
+  <%= @item.offload_date %>
+</p>
+
+<p>
+  <strong>Offload by:</strong>
+  <%= @item.offload_by %>
+</p>
+
+<%= link_to 'Edit', edit_item_path(@item) %> |
+<%= link_to 'Back', items_path %>

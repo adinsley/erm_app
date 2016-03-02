@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  food_id: 
+  location_id: 
+  best_before: 2016-03-01
+  onload_date: 2016-03-01
+  onload_by: MyString
+  offload_date: 2016-03-01
+  offload_by: MyString
+
+two:
+  food_id: 
+  location_id: 
+  best_before: 2016-03-01
+  onload_date: 2016-03-01
+  onload_by: MyString
+  offload_date: 2016-03-01
+  offload_by: MyString

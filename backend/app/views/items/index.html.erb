@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Food</th>
+      <th>Location</th>
+      <th>Best before</th>
+      <th>Onload date</th>
+      <th>Onload by</th>
+      <th>Offload date</th>
+      <th>Offload by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= item.food %></td>
+        <td><%= item.location %></td>
+        <td><%= item.best_before %></td>
+        <td><%= item.onload_date %></td>
+        <td><%= item.onload_by %></td>
+        <td><%= item.offload_date %></td>
+        <td><%= item.offload_by %></td>
+        <td><%= link_to 'Show', item %></td>
+        <td><%= link_to 'Edit', edit_item_path(item) %></td>
+        <td><%= link_to 'Destroy', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Item', new_item_path %>

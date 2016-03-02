@@ -1,0 +1,45 @@
+<%= form_for(@item) do |f| %>
+  <% if @item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+      <% @item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :food_id %><br>
+    <%= f.collection_select(:food_id, @foods, :id, :name) %>
+  </div>
+  <div class="field">
+    <%= f.label :location_id %><br>
+    <%= f.collection_select(:location_id, @locations, :id, :name) %>
+  </div>
+  <div class="field">
+    <%= f.label :best_before %><br>
+    <%= f.date_select :best_before %>
+  </div>
+  <div class="field">
+    <%= f.label :onload_date %><br>
+    <%= f.date_select :onload_date %>
+  </div>
+  <div class="field">
+    <%= f.label :onload_by %><br>
+    <%= f.text_field :onload_by %>
+  </div>
+  <div class="field">
+    <%= f.label :offload_date %><br>
+    <%= f.date_select :offload_date %>
+  </div>
+  <div class="field">
+    <%= f.label :offload_by %><br>
+    <%= f.text_field :offload_by %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
