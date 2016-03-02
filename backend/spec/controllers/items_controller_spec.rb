@@ -92,7 +92,7 @@ describe ItemsController do
               expect(item_response).to have_key(:message)
             end
 
-            it "renders the json errors on whye the user could not be created" do
+            it "renders the json errors on why the user could not be created" do
               item_response = JSON.parse(response.body, symbolize_names: true)
               expect(item_response[:message][:onload_day]).to include "can't be blank"
             end
