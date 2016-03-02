@@ -4,8 +4,8 @@ class FoodsController < ApplicationController
   # GET /foods
   # GET /foods.json
   def index
-    foods = Food.all
-    render :json => foods.to_json()
+    @foods = Food.all
+    render :json => @foods, :only => [:id, :name, :store]
   end
 
   # GET /foods/1
