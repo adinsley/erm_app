@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160302100157) do
+ActiveRecord::Schema.define(version: 20160302110202) do
 
   create_table "foods", force: :cascade do |t|
     t.string   "name"
@@ -28,12 +28,16 @@ ActiveRecord::Schema.define(version: 20160302100157) do
     t.integer  "food_id"
     t.integer  "location_id"
     t.date     "best_before"
-    t.date     "onload_date"
     t.string   "onload_by"
-    t.date     "offload_date"
     t.string   "offload_by"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.string   "onload_year"
+    t.string   "onload_week"
+    t.string   "onload_day"
+    t.string   "offload_year"
+    t.string   "offload_week"
+    t.string   "offload_day"
   end
 
   add_index "items", ["food_id"], name: "index_items_on_food_id"

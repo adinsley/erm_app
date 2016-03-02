@@ -17,6 +17,12 @@ class ItemsController < ApplicationController
 
   end
 
+  def new
+    @item = Item.new
+    @foods = Food.all
+    @locations = Location.all
+  end
+
   
 
   # GET /items/1/edit
@@ -26,9 +32,14 @@ class ItemsController < ApplicationController
   # POST /items
   # POST /items.json
   def create
-        Item.create(item_params)
+        @item = Item.new(item_params)
+        if @item.save
         @items = Item.all
-        render :json => @items, :include =>[{:location =>{:except=>[:id, :created_at, :updated_at]}}, {:food =>{:except =>[:id, :created_at, :updated_at]}}], :except => [:created_at, :updated_at, :food_id, :location_id]
+        render status: 200, :json => @items, :include =>[{:location =>{:except=>[:id, :created_at, :updated_at]}}, {:food =>{:except =>[:id, :created_at, :updated_at]}}], :except => [:created_at, :updated_at, :food_id, :location_id]
+        else
+          render status: 404,  json: {
+    message: "Data Invalid"}.to_json
+        end
     
     
   end
@@ -61,6 +72,6 @@ class ItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
-      params.require(:item).permit(:food_id, :location_id, :best_before, :onload_date, :onload_by, :offload_date, :offload_by)
+      params.require(:item).permit(:food_id, :location_id, :best_before, :onload_year, :onload_week, :onload_day, :onload_by, :offload_year, :offload_week, :offload_day, :offload_by)
     end
 end
