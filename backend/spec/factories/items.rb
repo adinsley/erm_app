@@ -32,17 +32,3 @@ FactoryGirl.define do
 
 end
 
-# "id": 3,
-#     "food_id": 2,
-#     "location_id": 2,
-#     "best_before": "2016-07-20",
-#     "onload_by": "Andrew Insley",
-#     "offload_by": null,
-#     "created_at": "2016-03-02T11:06:47.289Z",
-#     "updated_at": "2016-03-02T11:06:47.289Z",
-#     "onload_year": null,
-#     "onload_week": null,
-#     "onload_day": null,
-#     "offload_year": null,
-#     "offload_week": null,
-#     "offload_day": null
