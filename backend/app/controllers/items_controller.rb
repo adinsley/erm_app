@@ -37,8 +37,7 @@ class ItemsController < ApplicationController
         @items = Item.all
         render status: 200, :json => @items, :include =>[{:location =>{:except=>[:id, :created_at, :updated_at]}}, {:food =>{:except =>[:id, :created_at, :updated_at]}}], :except => [:created_at, :updated_at, :food_id, :location_id]
         else
-          render status: 404,  json: {
-    message: "Data Invalid"}.to_json
+          render status: 404,  json: { message: "Data Invalid"}.to_json
         end
     
     
@@ -47,8 +46,11 @@ class ItemsController < ApplicationController
   # PATCH/PUT /items/1
   # PATCH/PUT /items/1.json
   def update
-    @item.update(item_params)
+    if @item.update(item_params)
    render :json => @item, :include =>[{:location =>{:except=>[:id, :created_at, :updated_at]}}, {:food =>{:except =>[:id, :created_at, :updated_at]}}], :except => [:created_at, :updated_at, :food_id, :location_id]
+    else
+      render status: 404,  json: {message: "Data Invalid"}.to_json
+    end
 
     
   end
