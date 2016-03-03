@@ -71,33 +71,44 @@ describe ItemsController do
               patch :update, { id: @item.id,
                                item: { onload_day: "Monday" } }, format: :json
             end
-
-            it "renders the json representation for the updated user" do
-              item_response = JSON.parse(response.body, symbolize_names: true)
-              expect(item_response[:onload_day]).to eql "Monday"
+            it "renders the json representation for the updated user and replies with a 201 response code" do
+                  item_response = JSON.parse(response.body, symbolize_names: true)
+                  expect(item_response[:onload_day]).to eql "Monday"
             end
-
             it { should respond_with 201 }
           end
 
           context "when is not created" do
             before(:each) do
-              @item = FactoryGirl.create :item
-              patch :update, { id: @item.id,
-                               item: { onload_day: nil } }, format: :json
+                @item = FactoryGirl.create :item
+                patch :update, { id: @item.id,
+                            item: { onload_day: nil } }, format: :json
             end
 
             it "renders an errors json" do
-              item_response = JSON.parse(response.body, symbolize_names: true)
-              expect(item_response).to have_key(:message)
+                item_response = JSON.parse(response.body, symbolize_names: true)
+                expect(item_response).to have_key(:message)
             end
 
-            it "renders the json errors on why the user could not be created" do
+            it "renders the json errors on why the user could not be created and responds with a 404" do
               item_response = JSON.parse(response.body, symbolize_names: true)
               expect(item_response[:message][:onload_day]).to include "can't be blank"
-            end
-
+            end 
             it { should respond_with 404 }
           end
+      end
+
+      describe "GET #index" do
+        before(:each) do
+             @items = FactoryGirl.create_list(:item, 10) 
+             get :index, format: :json
+           end
+           it "returns the lists of items" do
+                 items_response = JSON.parse(response.body, symbolize_names: true)
+                 expect(items_response.length).to eql(10) 
+               end
+
+               it { should respond_with 200 }
+
       end
 end

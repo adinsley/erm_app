@@ -16,7 +16,7 @@ FactoryGirl.define do
   end
 
   factory :food do
-    name "Banana"
+    name {FFaker::Name.name}
     store "Fresh"
     quantity 1
     quantity_type "kg"
@@ -25,7 +25,7 @@ FactoryGirl.define do
   end
 
   factory :location do
-    name "Test"
+    name {FFaker::Name.name}
     deck '1'
     position '1'
     rack '1'
