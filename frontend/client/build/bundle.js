@@ -48,14 +48,11 @@
 	
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
+	var Main = __webpack_require__(159);
 	
 	window.onload = function () {
 	  console.log("webpack app started");
-	  ReactDOM.render(React.createElement(
-	    'h1',
-	    null,
-	    'Can you see This react'
-	  ), document.getElementById('app')); //Render takes in 2 arguements, first what to render, the second where to render it too.
+	  ReactDOM.render(React.createElement(Main, null), document.getElementById('app')); //Render takes in 2 arguements, first what to render, the second where to render it too.
 	};
 
 /***/ },
@@ -19658,6 +19655,33 @@
 	
 	module.exports = __webpack_require__(3);
 
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	
+	var Counter = React.createClass({
+	  displayName: 'Counter',
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'This is now inside the main container'
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Counter;
 
 /***/ }
 /******/ ]);
