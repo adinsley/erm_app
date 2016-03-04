@@ -6,7 +6,7 @@ var Main = require('./components/main.jsx')
 window.onload = function(){
   console.log("webpack app started");
   ReactDOM.render(
-<Main></Main>, 
+<Main url="http://localhost:5050/items"></Main>, 
 document.getElementById('app')
   );//Render takes in 2 arguements, first what to render, the second where to render it too.
 

@@ -25,9 +25,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'devise'
 
-gem 'rack-cors'
 
 gem 'responders', '~> 2.0'
+
+gem 'rack-cors', :require => 'rack/cors'
 
 group :test do
   gem "rspec-rails", "~> 2.14"

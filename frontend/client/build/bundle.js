@@ -52,7 +52,7 @@
 	
 	window.onload = function () {
 	  console.log("webpack app started");
-	  ReactDOM.render(React.createElement(Main, null), document.getElementById('app')); //Render takes in 2 arguements, first what to render, the second where to render it too.
+	  ReactDOM.render(React.createElement(Main, { url: 'http://localhost:5050/items' }), document.getElementById('app')); //Render takes in 2 arguements, first what to render, the second where to render it too.
 	};
 
 /***/ },
@@ -19660,28 +19660,49 @@
 /* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	var React = __webpack_require__(1);
 	
-	var Counter = React.createClass({
-	  displayName: 'Counter',
+	var MainContainer = React.createClass({
+	  displayName: "MainContainer",
 	
+	  getInitialState: function getInitialState() {
+	    return { data: [] };
+	  },
+	
+	  fetchItems: function fetchItems() {
+	    var request = new XMLHttpRequest();
+	    request.open("GET", this.props.url);
+	    request.onload = function () {
+	      if (request.status == 200) {
+	        var receivedItems = JSON.parse(request.responseText);
+	        this.setState({ data: receivedItems });
+	      }
+	    }.bind(this);
+	
+	    request.send(null);
+	  },
+	
+	  componentDidMount: function componentDidMount() {
+	    this.fetchItems();
+	    setInterval(this.fetchItems, 1000);
+	  },
 	
 	  render: function render() {
 	    return React.createElement(
-	      'div',
+	      "div",
 	      null,
 	      React.createElement(
-	        'h1',
+	        "h1",
 	        null,
-	        'This is now inside the main container'
+	        "This is now inside the main container"
 	      )
 	    );
 	  }
 	});
 	
-	module.exports = Counter;
+	module.exports = MainContainer;
 
 /***/ }
 /******/ ]);
