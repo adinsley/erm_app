@@ -48,7 +48,7 @@
 	
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var Main = __webpack_require__(159);
+	var Main = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/main.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	
 	window.onload = function () {
 	  console.log("webpack app started");
@@ -19655,54 +19655,6 @@
 	
 	module.exports = __webpack_require__(3);
 
-
-/***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var MainContainer = React.createClass({
-	  displayName: "MainContainer",
-	
-	  getInitialState: function getInitialState() {
-	    return { data: [] };
-	  },
-	
-	  fetchItems: function fetchItems() {
-	    var request = new XMLHttpRequest();
-	    request.open("GET", this.props.url);
-	    request.onload = function () {
-	      if (request.status == 200) {
-	        var receivedItems = JSON.parse(request.responseText);
-	        this.setState({ data: receivedItems });
-	      }
-	    }.bind(this);
-	
-	    request.send(null);
-	  },
-	
-	  componentDidMount: function componentDidMount() {
-	    this.fetchItems();
-	    setInterval(this.fetchItems, 1000);
-	  },
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      null,
-	      React.createElement(
-	        "h1",
-	        null,
-	        "This is now inside the main container"
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = MainContainer;
 
 /***/ }
 /******/ ]);
