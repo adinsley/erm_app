@@ -1,4 +1,5 @@
-var Item = function(name, location, price, end_level, store_type, quantity, quantity_type, best_before){
+var Item = function(id, name, location, price, end_level, store_type, quantity, quantity_type, best_before){
+  this.id = id;
   this.name = name;
   this.location = location;
   this.price = price;

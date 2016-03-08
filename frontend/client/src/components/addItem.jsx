@@ -11,7 +11,8 @@ var AddItem = React.createClass({
         return <option id={food.id} value={food.id} key={food.id}>{food.name}</option>
     },
   createLocationOption:function(locale){
-        return <option value={locale.id} key={locale.id}>{locale.name} </option>
+        // var str = locale.id + "|" +locale.store
+        return <option  value= {locale.id} key={locale.id}>{locale.name} {locale.store} </option>
     },
   setDate:function(e){
     e.preventDefault();
@@ -30,11 +31,21 @@ var AddItem = React.createClass({
   },
 
   handleSubmit:function(e){
-    e.preventDefault()
-    console.log(this.state.location)
-    console.log(this.state.food)
-    console.log(this.state.user)
-    console.log(moment(this.state.date).format("YYYY[-]MM[-]DD"))
+    
+    // this.props.onCommentSubmit({author: author, text: text});
+    // this.setState({author: '', text: ''});
+    
+    e.preventDefault(e)
+    var user = this.props.user.trim();
+    var year = this.props.year
+    var week = this.props.week
+    var day = this.props.day
+    var foodId = this.state.food
+    var locationId = this.state.location
+    var bestBefore = moment(this.state.date).format("YYYY[-]MM[-]DD")
+    console.log(bestBefore)
+    this.props.itemSubmit({onload_year: year, onload_week:week, onload_day:day, onload_by:user, best_before: bestBefore, food_id:foodId, location_id:locationId})
+    this.setState({food:null, location:null})
 
   },
 
@@ -46,6 +57,11 @@ var AddItem = React.createClass({
            <select onChange={this.setFood}>
                 <option>Select Food</option>
                  {this.props.foods.map(this.createFoodOption)}
+           </select>
+
+           <select onChange={this.setLocation}>
+                <option>Select Location</option>
+                 {this.props.locations.map(this.createLocationOption)}
            </select>
 
           <input type="date" placeholder="date" value={moment(this.state.date).format("YYYY[-]MM[-]DD")} onChange={this.setDate}></input>

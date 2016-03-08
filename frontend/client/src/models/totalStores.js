@@ -1,3 +1,5 @@
+_ = require('lodash')
+
 var TotalStores = function(){
   this.items = [];
 
@@ -13,6 +15,16 @@ TotalStores.prototype = {
         value += item.price
       }
       return 20
+    },
+
+    filterItemsByLocation:function(location){
+      console.log('in ts model passed in location===', location)
+      var filteredItems = this.items.filter(function(item){
+        if(item.location == location){
+          return item
+        }
+      })
+      return filteredItems
     }
 }
 
