@@ -18,7 +18,6 @@ TotalStores.prototype = {
     },
 
     filterItemsByLocation:function(location){
-      console.log('in ts model passed in location===', location)
       var filteredItems = this.items.filter(function(item){
         if(item.location == location){
           return item

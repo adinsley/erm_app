@@ -101,6 +101,23 @@ var MainContainer = React.createClass({
     
   },
 
+  handleItemUse:function(item, id){
+      var request = new XMLHttpRequest();
+      request.open("PUT", this.props.url + "/"+ id);
+      request.setRequestHeader("Content-Type", 'application/json');
+      request.onload = function(){
+        if(request =200){
+          var receivedItems = JSON.parse(request.responseText)
+          var totalStores = new TotalStores
+          for(var item of receivedItems){
+              var newItem = new Item(item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before)
+                totalStores.items.push(newItem)
+           }
+          }
+        }.bind(this)
+          request.send( JSON.stringify(item))
+  },
+
   //Button Controls
 
   addItemButton: function(e){
@@ -217,7 +234,7 @@ var MainContainer = React.createClass({
           </div>
           <div id="childViews">
           { this.state.showAddItem ? <AddItem foods={this.state.food} locations={this.state.location} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} itemSubmit={this.handleItemSubmit}/> : null }
-          {this.state.showUseItem ? <UseItem locations={this.state.location} items={this.state.items}/> : null }
+          {this.state.showUseItem ? <UseItem locations={this.state.location} items={this.state.items} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} useItem={this.handleItemUse} /> : null }
           </div>
         </div>
       );
