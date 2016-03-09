@@ -20242,12 +20242,16 @@
 	  },
 	
 	  filterItemsByFood: function filterItemsByFood(food) {
-	    var filteredItems = this.items.filter(function (item) {
-	      if (item.name == food) {
-	        return item;
-	      }
-	    });
-	    return filteredItems;
+	    if (food != null) {
+	      var filteredItems = this.items.filter(function (item) {
+	        if (item.name == food) {
+	          return item;
+	        }
+	      });
+	      return filteredItems;
+	    } else {
+	      return [];
+	    }
 	  },
 	
 	  liveItems: function liveItems() {
@@ -35582,7 +35586,7 @@
 	      React.createElement(
 	        'div',
 	        { id: 'locationFoodChildren' },
-	        this.state.foodView ? React.createElement(FoodView, { foods: this.props.foods }) : null,
+	        this.state.foodView ? React.createElement(FoodView, { foods: this.props.foods, items: this.props.liveItems }) : null,
 	        this.state.locationView ? React.createElement(LocationView, null) : null
 	      )
 	    );
@@ -35630,6 +35634,7 @@
 	var React = __webpack_require__(1);
 	var Item = __webpack_require__(160);
 	var TotalStores = __webpack_require__(161);
+	var Moment = __webpack_require__(168);
 	
 	var FoodView = React.createClass({
 	  displayName: 'FoodView',
@@ -35648,8 +35653,68 @@
 	
 	  handleFoodChange: function handleFoodChange(e) {
 	    e.preventDefault();
-	    console.log(e.target.value);
 	    this.setState({ selectedFood: e.target.value });
+	  },
+	
+	  buildFoodTableRows: function buildFoodTableRows() {
+	    var that = this;
+	    var filteredStores = new TotalStores();
+	    filteredStores.items = this.props.items;
+	    var filteredItems = filteredStores.filterItemsByFood(this.state.selectedFood);
+	
+	    if (filteredItems[0]) {
+	      return filteredItems.map(function (item, index) {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            index + 1
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.location
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            Moment(item.best_before).format("dddd, MMMM Do YYYY")
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_by
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_day
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_week
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_year
+	          )
+	        );
+	      }); //End of the map
+	    } else {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            'Non of that Type Loaded'
+	          )
+	        );
+	      } //End of if
 	  },
 	
 	  render: function render() {
@@ -35657,11 +35722,6 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Inside the foodView Component'
-	      ),
 	      React.createElement(
 	        'div',
 	        { id: 'foodSelect' },
@@ -35676,7 +35736,68 @@
 	          this.props.foods.map(this.createOption)
 	        )
 	      ),
-	      React.createElement('div', { id: 'tableByFood' })
+	      React.createElement(
+	        'div',
+	        { id: 'tableByFood' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          'Table Displaying Info on -- ',
+	          this.state.selectedFood
+	        ),
+	        React.createElement(
+	          'table',
+	          null,
+	          React.createElement(
+	            'thead',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'th',
+	                null,
+	                'Number'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Location'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Best Before'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onload By'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onload Day'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onload Week'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onloaded Year'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
+	            this.buildFoodTableRows()
+	          )
+	        )
+	      )
 	    );
 	  }
 	});

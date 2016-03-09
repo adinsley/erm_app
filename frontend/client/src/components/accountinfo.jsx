@@ -97,7 +97,7 @@ var AccountInfo = React.createClass({
             <button onClick={this.handleLocationButton}>See Items By Location</button>
           </div>
           <div id="locationFoodChildren" >
-              {this.state.foodView ? <FoodView foods={this.props.foods}/> : null}
+              {this.state.foodView ? <FoodView foods={this.props.foods} items={this.props.liveItems}/> : null}
               {this.state.locationView ? <LocationView/> : null}
           </div>
       </div>

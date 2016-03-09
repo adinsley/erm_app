@@ -36,12 +36,16 @@ TotalStores.prototype = {
     },
 
     filterItemsByFood:function(food){
-      var filteredItems = this.items.filter(function(item){
-        if(item.name == food){
-          return item
-        }
-      })
-      return filteredItems
+      if(food != null){
+          var filteredItems = this.items.filter(function(item){
+            if(item.name == food){
+              return item
+            }
+          })
+          return filteredItems
+      }else{
+          return []
+      }
     },
 
     liveItems:function(){
