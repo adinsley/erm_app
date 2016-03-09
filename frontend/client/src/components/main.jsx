@@ -21,7 +21,7 @@ var MainContainer = React.createClass({
           var receivedItems = JSON.parse(request.responseText)
           var totalStores = new TotalStores
           for(var item of receivedItems){
-            var newItem = new Item(item.id, item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before)
+            var newItem = new Item(item.id, item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before, item.onload_by, item.onload_year, item.onload_week, item.onload_day, item.offload_by, item.offload_year, item.offload_week, item.offload_day)
             totalStores.items.push(newItem)
           }
          this.setState({items:totalStores.items})
@@ -73,16 +73,10 @@ var MainContainer = React.createClass({
     this.fetchItems();
     this.fetchFoods();
     this.fetchLocations();
+    setInterval(this.fetchItems, 1000)
   },
 
   handleItemSubmit: function(item) {
-    var items = this.state.items;
-    item.id = Date.now();
-    var newItems = items.concat([item]);
-    this.setState({items: newItems});
-
-  //Sending the data to the back end
-
     var request = new XMLHttpRequest();
     request.open("POST", this.props.url);
     request.setRequestHeader("Content-Type", 'application/json');
@@ -94,11 +88,27 @@ var MainContainer = React.createClass({
             var newItem = new Item(item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before)
               totalStores.items.push(newItem)
          }
-        this.setState({items:totalStores.items})
       }
       }.bind(this)
         request.send( JSON.stringify(item))
-    
+        
+  },
+
+  handleItemUse:function(item, id){
+      var request = new XMLHttpRequest();
+      request.open("PUT", this.props.url + "/"+ id);
+      request.setRequestHeader("Content-Type", 'application/json');
+      request.onload = function(){
+        if(request =200){
+          var receivedItems = JSON.parse(request.responseText)
+          var totalStores = new TotalStores
+          for(var item of receivedItems){
+              var newItem = new Item(item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before)
+                totalStores.items.push(newItem)
+           }
+          }
+        }.bind(this)
+          request.send( JSON.stringify(item))
   },
 
   //Button Controls
@@ -107,8 +117,9 @@ var MainContainer = React.createClass({
     var addButton = document.querySelector("#addItem")
     e.preventDefault()
     if(this.state.showAddItem == false){
-       this.setState({showAddItem:true})
-       addButton.innerText = "Hide Add Item Menu"
+       this.setState({showAddItem:true});
+       this.setState({showUseItem:false});
+       addButton.innerText = "Hide Add Item Menu";
     }else{
       this.setState({showAddItem:false})
       addButton.innerText = "Show Add Item Menu"
@@ -119,6 +130,7 @@ var MainContainer = React.createClass({
     var useButton = document.querySelector("#useItem")
     e.preventDefault()
     if(this.state.showUseItem == false){
+      this.setState({showAddItem:false})
        this.setState({showUseItem:true})
        useButton.innerText = "Hide Use Item Menu"
     }else{
@@ -170,7 +182,8 @@ var MainContainer = React.createClass({
 
 
   render: function(){
-    
+    var totalStores = new TotalStores;
+    totalStores.items = this.state.items;
     return(
         <div id="MainContainer">
           <header id="headerInfo">
@@ -217,7 +230,7 @@ var MainContainer = React.createClass({
           </div>
           <div id="childViews">
           { this.state.showAddItem ? <AddItem foods={this.state.food} locations={this.state.location} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} itemSubmit={this.handleItemSubmit}/> : null }
-          {this.state.showUseItem ? <UseItem locations={this.state.location} items={this.state.items}/> : null }
+          {this.state.showUseItem ? <UseItem locations={this.state.location} items={totalStores.liveItems()} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} useItem={this.handleItemUse} /> : null }
           </div>
         </div>
       );

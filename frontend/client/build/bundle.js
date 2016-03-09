@@ -19692,7 +19692,7 @@
 	          for (var _iterator = receivedItems[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	            var item = _step.value;
 	
-	            var newItem = new Item(item.id, item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before);
+	            var newItem = new Item(item.id, item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before, item.onload_by, item.onload_year, item.onload_week, item.onload_day, item.offload_by, item.offload_year, item.offload_week, item.offload_day);
 	            totalStores.items.push(newItem);
 	          }
 	        } catch (err) {
@@ -19799,16 +19799,10 @@
 	    this.fetchItems();
 	    this.fetchFoods();
 	    this.fetchLocations();
+	    setInterval(this.fetchItems, 1000);
 	  },
 	
 	  handleItemSubmit: function handleItemSubmit(item) {
-	    var items = this.state.items;
-	    item.id = Date.now();
-	    var newItems = items.concat([item]);
-	    this.setState({ items: newItems });
-	
-	    //Sending the data to the back end
-	
 	    var request = new XMLHttpRequest();
 	    request.open("POST", this.props.url);
 	    request.setRequestHeader("Content-Type", 'application/json');
@@ -19841,8 +19835,44 @@
 	            }
 	          }
 	        }
+	      }
+	    }.bind(this);
+	    request.send(JSON.stringify(item));
+	  },
 	
-	        this.setState({ items: totalStores.items });
+	  handleItemUse: function handleItemUse(item, id) {
+	    var request = new XMLHttpRequest();
+	    request.open("PUT", this.props.url + "/" + id);
+	    request.setRequestHeader("Content-Type", 'application/json');
+	    request.onload = function () {
+	      if (request = 200) {
+	        var receivedItems = JSON.parse(request.responseText);
+	        var totalStores = new TotalStores();
+	        var _iteratorNormalCompletion5 = true;
+	        var _didIteratorError5 = false;
+	        var _iteratorError5 = undefined;
+	
+	        try {
+	          for (var _iterator5 = receivedItems[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	            var item = _step5.value;
+	
+	            var newItem = new Item(item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before);
+	            totalStores.items.push(newItem);
+	          }
+	        } catch (err) {
+	          _didIteratorError5 = true;
+	          _iteratorError5 = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	              _iterator5.return();
+	            }
+	          } finally {
+	            if (_didIteratorError5) {
+	              throw _iteratorError5;
+	            }
+	          }
+	        }
 	      }
 	    }.bind(this);
 	    request.send(JSON.stringify(item));
@@ -19855,6 +19885,7 @@
 	    e.preventDefault();
 	    if (this.state.showAddItem == false) {
 	      this.setState({ showAddItem: true });
+	      this.setState({ showUseItem: false });
 	      addButton.innerText = "Hide Add Item Menu";
 	    } else {
 	      this.setState({ showAddItem: false });
@@ -19866,6 +19897,7 @@
 	    var useButton = document.querySelector("#useItem");
 	    e.preventDefault();
 	    if (this.state.showUseItem == false) {
+	      this.setState({ showAddItem: false });
 	      this.setState({ showUseItem: true });
 	      useButton.innerText = "Hide Use Item Menu";
 	    } else {
@@ -19931,7 +19963,8 @@
 	  },
 	
 	  render: function render() {
-	
+	    var totalStores = new TotalStores();
+	    totalStores.items = this.state.items;
 	    return React.createElement(
 	      'div',
 	      { id: 'MainContainer' },
@@ -20054,7 +20087,7 @@
 	        'div',
 	        { id: 'childViews' },
 	        this.state.showAddItem ? React.createElement(AddItem, { foods: this.state.food, locations: this.state.location, user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, itemSubmit: this.handleItemSubmit }) : null,
-	        this.state.showUseItem ? React.createElement(UseItem, { locations: this.state.location, items: this.state.items }) : null
+	        this.state.showUseItem ? React.createElement(UseItem, { locations: this.state.location, items: totalStores.liveItems(), user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, useItem: this.handleItemUse }) : null
 	      )
 	    );
 	  }
@@ -20069,7 +20102,7 @@
 
 	"use strict";
 	
-	var Item = function Item(id, name, location, price, end_level, store_type, quantity, quantity_type, best_before) {
+	var Item = function Item(id, name, location, price, end_level, store_type, quantity, quantity_type, best_before, onload_by, onload_year, onload_week, onload_day, offload_by, offload_year, offload_week, offload_day) {
 	  this.id = id;
 	  this.name = name;
 	  this.location = location;
@@ -20079,6 +20112,14 @@
 	  this.quantity = quantity;
 	  this.quantity_type = quantity_type;
 	  this.best_before = best_before;
+	  this.onload_by = onload_by;
+	  this.onload_year = onload_year;
+	  this.onload_week = onload_week;
+	  this.onload_day = onload_day;
+	  this.offload_by = offload_by;
+	  this.offload_year = offload_year;
+	  this.offload_week = offload_week;
+	  this.offload_day = offload_day;
 	};
 	
 	Item.prototype = {};
@@ -20128,18 +20169,36 @@
 	      }
 	    }
 	
-	    return 20;
+	    return value;
 	  },
 	
 	  filterItemsByLocation: function filterItemsByLocation(location) {
-	    console.log('in ts model passed in location===', location);
 	    var filteredItems = this.items.filter(function (item) {
 	      if (item.location == location) {
 	        return item;
 	      }
 	    });
 	    return filteredItems;
+	  },
+	
+	  liveItems: function liveItems() {
+	    var liveItems = this.items.filter(function (item) {
+	      if (item.offload_by == null) {
+	        return item;
+	      }
+	    });
+	    return liveItems;
+	  },
+	
+	  usedItems: function usedItems() {
+	    var usedItems = this.items.filter(function (item) {
+	      if (item.offload_by != null) {
+	        return item;
+	      }
+	    });
+	    return usedItems;
 	  }
+	
 	};
 	
 	module.exports = TotalStores;
@@ -35339,7 +35398,6 @@
 	    var foodId = this.state.food;
 	    var locationId = this.state.location;
 	    var bestBefore = moment(this.state.date).format("YYYY[-]MM[-]DD");
-	    console.log(bestBefore);
 	    this.props.itemSubmit({ onload_year: year, onload_week: week, onload_day: day, onload_by: user, best_before: bestBefore, food_id: foodId, location_id: locationId });
 	    this.setState({ food: null, location: null });
 	  },
@@ -48496,15 +48554,76 @@
 	
 	  handleLocationChange: function handleLocationChange(e) {
 	    e.preventDefault();
-	    console.log(e.target.value);
 	    this.setState({ selectedLocation: e.target.value });
 	  },
 	
-	  render: function render() {
+	  handleButtonClick: function handleButtonClick(e) {
+	    e.preventDefault();
+	    var id = e.target.value;
+	    var user = this.props.user.trim();
+	    var year = this.props.year;
+	    var week = this.props.week;
+	    var day = this.props.day;
+	    this.props.useItem({ offload_by: user, offload_year: year, offload_week: week, offload_day: day }, id);
+	  },
+	
+	  createItemRows: function createItemRows() {
+	    var that = this;
 	    var totalStores = new TotalStores();
 	    totalStores.items = this.props.items;
 	    var filteredItems = totalStores.filterItemsByLocation(this.state.selectedLocation);
-	    console.log(totalStores);
+	
+	    if (filteredItems[0]) {
+	      return filteredItems.map(function (item, index) {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            index + 1
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.name
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.store
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.price
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            React.createElement(
+	              'button',
+	              { id: item.id, value: item.id, onClick: that.handleButtonClick },
+	              'Use Item'
+	            )
+	          )
+	        );
+	      }); //End of the map
+	    } else {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            'Location Empty'
+	          )
+	        );
+	      } //End of if
+	  }, //End of function
+	
+	  render: function render() {
+	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -48516,7 +48635,54 @@
 	      React.createElement(
 	        'select',
 	        { onChange: this.handleLocationChange },
+	        React.createElement(
+	          'option',
+	          null,
+	          'Select Store'
+	        ),
 	        this.props.locations.map(this.createLocationOptions)
+	      ),
+	      React.createElement(
+	        'table',
+	        null,
+	        React.createElement(
+	          'thead',
+	          null,
+	          React.createElement(
+	            'tr',
+	            null,
+	            React.createElement(
+	              'th',
+	              null,
+	              'Number'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Item Name'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Item Type'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Cost'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Use'
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'tbody',
+	          null,
+	          this.createItemRows()
+	        )
 	      )
 	    );
 	  }
