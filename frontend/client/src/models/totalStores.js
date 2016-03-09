@@ -42,7 +42,7 @@ TotalStores.prototype = {
         }
       })
       return usedItems
-    },
+    }
      
 
 }
