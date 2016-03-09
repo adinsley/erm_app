@@ -98,7 +98,7 @@ var AccountInfo = React.createClass({
           </div>
           <div id="locationFoodChildren" >
               {this.state.foodView ? <FoodView foods={this.props.foods} items={this.props.liveItems}/> : null}
-              {this.state.locationView ? <LocationView/> : null}
+              {this.state.locationView ? <LocationView locations={this.props.locations} items={this.props.liveItems}/> : null}
           </div>
       </div>
     )
