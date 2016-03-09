@@ -44,7 +44,7 @@ var AddItem = React.createClass({
     var locationId = this.state.location
     var bestBefore = moment(this.state.date).format("YYYY[-]MM[-]DD")
     this.props.itemSubmit({onload_year: year, onload_week:week, onload_day:day, onload_by:user, best_before: bestBefore, food_id:foodId, location_id:locationId})
-    this.setState({food:null, location:null})
+    
 
   },
 

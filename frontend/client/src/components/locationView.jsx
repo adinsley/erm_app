@@ -61,7 +61,7 @@ var LocationView = React.createClass({
             </select>
           </div>
           <div id="locationTable">
-            <h1>See info for --{this.state.selectedLocation} -- Rack</h1>
+            <h2>Table Displaying Info on -- {this.state.selectedLocation}</h2>
             <table>
               <thead>
                 <tr>

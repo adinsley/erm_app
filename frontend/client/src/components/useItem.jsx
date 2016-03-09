@@ -65,7 +65,7 @@ var UseItem = React.createClass({
     return(
       <div>
         <h4>This section is replicating the function of a scanner when food is used</h4>
-        <select onChange={this.handleLocationChange}>
+        <select id="selectUseFood" onChange={this.handleLocationChange}>
           <option>Select Store</option>
           {this.props.locations.map(this.createLocationOptions)}
         </select>

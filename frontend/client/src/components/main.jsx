@@ -73,7 +73,7 @@ var MainContainer = React.createClass({
     this.fetchItems();
     this.fetchFoods();
     this.fetchLocations();
-    setInterval(this.fetchItems, 1000)
+    setInterval(this.fetchItems, 20000)
   },
 
   handleItemSubmit: function(item) {
@@ -254,7 +254,7 @@ var MainContainer = React.createClass({
           </div>
 
           <div id="action_select">
-          <h2 id="button Title">Please select Action</h2>
+          <h2 id="button Title">Select Action</h2>
             <button id="addItem" onClick={this.addItemButton} value="Dogs">Add Item</button>
             <button id="useItem" onClick={this.useItemButton}>Use Item</button>
             <button id="analyis" onClick={this.useAlButton}>Analayis Current Stocks</button>

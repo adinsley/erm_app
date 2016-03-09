@@ -19799,7 +19799,7 @@
 	    this.fetchItems();
 	    this.fetchFoods();
 	    this.fetchLocations();
-	    setInterval(this.fetchItems, 1000);
+	    setInterval(this.fetchItems, 20000);
 	  },
 	
 	  handleItemSubmit: function handleItemSubmit(item) {
@@ -20102,7 +20102,7 @@
 	        React.createElement(
 	          'h2',
 	          { id: 'button Title' },
-	          'Please select Action'
+	          'Select Action'
 	        ),
 	        React.createElement(
 	          'button',
@@ -35520,19 +35520,19 @@
 	      'div',
 	      null,
 	      React.createElement(
-	        'form',
+	        'h1',
 	        null,
+	        'Current Stock Info'
+	      ),
+	      React.createElement(
+	        'form',
+	        { id: 'crewNumber' },
 	        React.createElement(
 	          'label',
 	          { 'for': 'crewNumber', id: 'crewNumber' },
 	          'Enter current Crew Level:'
 	        ),
 	        React.createElement('input', { name: 'crewNumber', type: 'number', value: this.state.crewNumber, onChange: this.handleCrewChange })
-	      ),
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Current Stock Info'
 	      ),
 	      React.createElement(
 	        'h2',
@@ -35734,11 +35734,10 @@
 	        'div',
 	        { id: 'locationTable' },
 	        React.createElement(
-	          'h1',
+	          'h2',
 	          null,
-	          'See info for --',
-	          this.state.selectedLocation,
-	          ' -- Rack'
+	          'Table Displaying Info on -- ',
+	          this.state.selectedLocation
 	        ),
 	        React.createElement(
 	          'table',
@@ -49134,7 +49133,6 @@
 	    var locationId = this.state.location;
 	    var bestBefore = moment(this.state.date).format("YYYY[-]MM[-]DD");
 	    this.props.itemSubmit({ onload_year: year, onload_week: week, onload_day: day, onload_by: user, best_before: bestBefore, food_id: foodId, location_id: locationId });
-	    this.setState({ food: null, location: null });
 	  },
 	
 	  render: function render() {
@@ -49292,7 +49290,7 @@
 	      ),
 	      React.createElement(
 	        'select',
-	        { onChange: this.handleLocationChange },
+	        { id: 'selectUseFood', onChange: this.handleLocationChange },
 	        React.createElement(
 	          'option',
 	          null,

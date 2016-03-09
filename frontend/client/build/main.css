@@ -42,7 +42,30 @@ header p {
   color: white;
 }
 
+#action_select {
+  text-align: center;
+}
+
+
 #action_select button {
+  background-color: white;
+      border: none;
+      color: blue;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+}
+
+#inspectButtons{
+    text-align: center;
+
+}
+
+#inspectButtons button {
   background-color: white;
       border: none;
       color: blue;
@@ -74,6 +97,66 @@ header p {
   display: inline-block;
   margin-right: 10px;
 
+}
+
+#selectUseFood {
+  margin-bottom: 10px;
+  color:blue;
+}
+
+#crewNumber{
+ margin: 5px;
+}
+
+#crewNumber label{
+ color:white;
+ padding-right: 5px;
+
+}
+
+#crewNumber input{
+ color: blue;
+ width: 60px;
+}
+
+#foodDropdown {
+  color:blue;
+}
+
+#locationDropdown {
+  color:blue;
+}
+
+
+table {
+  margin: 0 auto;
+  width: 90%;
+  background-color: white;
+  color: blue;
+
+}
+
+thead {
+ border-bottom: 1px solid blue;
+ margin-top: 10px;
+}
+
+
+th, td {
+ height: 35px;
+ font-size: 15px;
+ font-weight: 100;
+ text-align: center;
+ padding: 0 10px
+}
+
+tbody tr:nth-child(even) {
+ background-color: gold;
+}
+
+tbody tr:hover {
+ background-color: red;
+ color: white;
 }
 
 

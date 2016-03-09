@@ -70,12 +70,13 @@ var AccountInfo = React.createClass({
     return(
       <div>
 
-        <form>
+        
+
+        <h1>Current Stock Info</h1>
+        <form id="crewNumber">
           <label for="crewNumber" id="crewNumber">Enter current Crew Level:</label>
           <input name="crewNumber" type="number" value={this.state.crewNumber} onChange={this.handleCrewChange}/>
         </form>
-
-        <h1>Current Stock Info</h1>
         <h2>Total Value of onboard stores: £{liveStores.totalValue()}</h2>
         <h2>Total Endurance: {Math.floor(liveStores.totalEndurance(this.state.crewNumber))} Days </h2>
           <div id="enduranceTable">
