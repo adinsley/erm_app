@@ -9,7 +9,7 @@ var UseItem = require('./useItem.jsx')
 
 var MainContainer = React.createClass({
   getInitialState: function() {
-    return {items: [], food: [], location:[], user:null, year:"2016", week:"1", day:"Monday", showAddItem:false, showUseItem:false};
+    return {items: [], food: [], location:[], user:null, year:"2016", week:"1", day:"Monday", showAddItem:false, showUseItem:false, showAnalyis:false};
   },
 
   // Loading the data from the API
@@ -21,7 +21,7 @@ var MainContainer = React.createClass({
           var receivedItems = JSON.parse(request.responseText)
           var totalStores = new TotalStores
           for(var item of receivedItems){
-            var newItem = new Item(item.id, item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before, item.onload_by, item.onload_year, item.onload_week, item.onload_day, item.offload_by, item.offload_year, item.offload_week, item.offload_day)
+            var newItem = new Item(item.id, item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, new Date(item.best_before), item.onload_by, item.onload_year, item.onload_week, item.onload_day, item.offload_by, item.offload_year, item.offload_week, item.offload_day)
             totalStores.items.push(newItem)
           }
          this.setState({items:totalStores.items})
@@ -30,7 +30,7 @@ var MainContainer = React.createClass({
             
 
       request.send(null);
-  
+      
   },
 
   fetchFoods:function(){
@@ -114,12 +114,17 @@ var MainContainer = React.createClass({
   //Button Controls
 
   addItemButton: function(e){
-    var addButton = document.querySelector("#addItem")
+    var useButton = document.querySelector("#useItem")
+        var addButton = document.querySelector("#addItem")
+        var alButton = document.querySelector("#analyis")
     e.preventDefault()
     if(this.state.showAddItem == false){
        this.setState({showAddItem:true});
-       this.setState({showUseItem:false});
        addButton.innerText = "Hide Add Item Menu";
+       this.setState({showUseItem:false})
+       useButton.innerText = "Show Use Item Menu"
+       this.setState({showAnalyis:false})
+       alButton.innerText = "Show Analysis Menu"
     }else{
       this.setState({showAddItem:false})
       addButton.innerText = "Show Add Item Menu"
@@ -128,16 +133,39 @@ var MainContainer = React.createClass({
 
   useItemButton:function(e){
     var useButton = document.querySelector("#useItem")
+    var addButton = document.querySelector("#addItem")
+    var alButton = document.querySelector("#analyis")
     e.preventDefault()
     if(this.state.showUseItem == false){
-      this.setState({showAddItem:false})
        this.setState({showUseItem:true})
        useButton.innerText = "Hide Use Item Menu"
+       this.setState({showAddItem:false});
+       addButton.innerText = "Hide Add Item Menu";
+       this.setState({showAnalyis:false})
+       alButton.innerText = "Show Analysis Menu"
     }else{
       this.setState({showUseItem:false})
       useButton.innerText = "Show Use Item Menu"
     }
   },
+
+  useAlButton:function(e){
+   var useButton = document.querySelector("#useItem")
+  var addButton = document.querySelector("#addItem")
+  var alButton = document.querySelector("#analyis")
+    if(this.state.showAnalyis == false){
+       this.setState({showAnalyis:true})
+       alButton.innerText = "Hide Analysis Menu"
+       this.setState({showUseItem:false})
+       useButton.innerText = "Hide Use Item Menu"
+       this.setState({showAddItem:false});
+       addButton.innerText = "Hide Add Item Menu";
+    }else{
+      this.setState({showAnalyis:false})
+      alButton.innerText = "Show Analysis Menu"
+    }
+  },
+
   // Setting the state from Main form Inputs
 
   handleUserChange:function(e){
@@ -225,12 +253,15 @@ var MainContainer = React.createClass({
           <h2 id="button Title">Please select Action</h2>
             <button id="addItem" onClick={this.addItemButton} value="Dogs">Add Item</button>
             <button id="useItem" onClick={this.useItemButton}>Use Item</button>
-            <button>Analayis Current Stocks</button>
+            <button id="analyis" onClick={this.useAlButton}>Analayis Current Stocks</button>
             <button>Build Order</button>
           </div>
           <div id="childViews">
           { this.state.showAddItem ? <AddItem foods={this.state.food} locations={this.state.location} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} itemSubmit={this.handleItemSubmit}/> : null }
+          
           {this.state.showUseItem ? <UseItem locations={this.state.location} items={totalStores.liveItems()} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} useItem={this.handleItemUse} /> : null }
+          
+          {this.state.showAnalyis ? <AccountInfo locations={this.state.location} foods={this.state.food} usedItems={totalStores.usedItems()} liveItems={totalStores.liveItems()}/> : null}
           </div>
         </div>
       );

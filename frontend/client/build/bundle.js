@@ -19673,7 +19673,7 @@
 	  displayName: 'MainContainer',
 	
 	  getInitialState: function getInitialState() {
-	    return { items: [], food: [], location: [], user: null, year: "2016", week: "1", day: "Monday", showAddItem: false, showUseItem: false };
+	    return { items: [], food: [], location: [], user: null, year: "2016", week: "1", day: "Monday", showAddItem: false, showUseItem: false, showAnalyis: false };
 	  },
 	
 	  // Loading the data from the API
@@ -19692,7 +19692,7 @@
 	          for (var _iterator = receivedItems[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	            var item = _step.value;
 	
-	            var newItem = new Item(item.id, item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, item.best_before, item.onload_by, item.onload_year, item.onload_week, item.onload_day, item.offload_by, item.offload_year, item.offload_week, item.offload_day);
+	            var newItem = new Item(item.id, item.food.name, item.location.name, item.food.price, item.food.end_level, item.location.store_type, item.food.quantity, item.food.quantity_type, new Date(item.best_before), item.onload_by, item.onload_year, item.onload_week, item.onload_day, item.offload_by, item.offload_year, item.offload_week, item.offload_day);
 	            totalStores.items.push(newItem);
 	          }
 	        } catch (err) {
@@ -19881,12 +19881,17 @@
 	  //Button Controls
 	
 	  addItemButton: function addItemButton(e) {
+	    var useButton = document.querySelector("#useItem");
 	    var addButton = document.querySelector("#addItem");
+	    var alButton = document.querySelector("#analyis");
 	    e.preventDefault();
 	    if (this.state.showAddItem == false) {
 	      this.setState({ showAddItem: true });
-	      this.setState({ showUseItem: false });
 	      addButton.innerText = "Hide Add Item Menu";
+	      this.setState({ showUseItem: false });
+	      useButton.innerText = "Show Use Item Menu";
+	      this.setState({ showAnalyis: false });
+	      alButton.innerText = "Show Analysis Menu";
 	    } else {
 	      this.setState({ showAddItem: false });
 	      addButton.innerText = "Show Add Item Menu";
@@ -19895,16 +19900,39 @@
 	
 	  useItemButton: function useItemButton(e) {
 	    var useButton = document.querySelector("#useItem");
+	    var addButton = document.querySelector("#addItem");
+	    var alButton = document.querySelector("#analyis");
 	    e.preventDefault();
 	    if (this.state.showUseItem == false) {
-	      this.setState({ showAddItem: false });
 	      this.setState({ showUseItem: true });
 	      useButton.innerText = "Hide Use Item Menu";
+	      this.setState({ showAddItem: false });
+	      addButton.innerText = "Hide Add Item Menu";
+	      this.setState({ showAnalyis: false });
+	      alButton.innerText = "Show Analysis Menu";
 	    } else {
 	      this.setState({ showUseItem: false });
 	      useButton.innerText = "Show Use Item Menu";
 	    }
 	  },
+	
+	  useAlButton: function useAlButton(e) {
+	    var useButton = document.querySelector("#useItem");
+	    var addButton = document.querySelector("#addItem");
+	    var alButton = document.querySelector("#analyis");
+	    if (this.state.showAnalyis == false) {
+	      this.setState({ showAnalyis: true });
+	      alButton.innerText = "Hide Analysis Menu";
+	      this.setState({ showUseItem: false });
+	      useButton.innerText = "Hide Use Item Menu";
+	      this.setState({ showAddItem: false });
+	      addButton.innerText = "Hide Add Item Menu";
+	    } else {
+	      this.setState({ showAnalyis: false });
+	      alButton.innerText = "Show Analysis Menu";
+	    }
+	  },
+	
 	  // Setting the state from Main form Inputs
 	
 	  handleUserChange: function handleUserChange(e) {
@@ -20074,7 +20102,7 @@
 	        ),
 	        React.createElement(
 	          'button',
-	          null,
+	          { id: 'analyis', onClick: this.useAlButton },
 	          'Analayis Current Stocks'
 	        ),
 	        React.createElement(
@@ -20087,7 +20115,8 @@
 	        'div',
 	        { id: 'childViews' },
 	        this.state.showAddItem ? React.createElement(AddItem, { foods: this.state.food, locations: this.state.location, user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, itemSubmit: this.handleItemSubmit }) : null,
-	        this.state.showUseItem ? React.createElement(UseItem, { locations: this.state.location, items: totalStores.liveItems(), user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, useItem: this.handleItemUse }) : null
+	        this.state.showUseItem ? React.createElement(UseItem, { locations: this.state.location, items: totalStores.liveItems(), user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, useItem: this.handleItemUse }) : null,
+	        this.state.showAnalyis ? React.createElement(AccountInfo, { locations: this.state.location, foods: this.state.food, usedItems: totalStores.usedItems(), liveItems: totalStores.liveItems() }) : null
 	      )
 	    );
 	  }
@@ -20130,7 +20159,7 @@
 /* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	_ = __webpack_require__(162);
 	
@@ -20172,6 +20201,37 @@
 	    return value;
 	  },
 	
+	  totalEndurance: function totalEndurance(crew) {
+	    var endurance = 0;
+	    var _iteratorNormalCompletion2 = true;
+	    var _didIteratorError2 = false;
+	    var _iteratorError2 = undefined;
+	
+	    try {
+	      for (var _iterator2 = this.items[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	        var item = _step2.value;
+	
+	        endurance += item.end_level;
+	      }
+	    } catch (err) {
+	      _didIteratorError2 = true;
+	      _iteratorError2 = err;
+	    } finally {
+	      try {
+	        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	          _iterator2.return();
+	        }
+	      } finally {
+	        if (_didIteratorError2) {
+	          throw _iteratorError2;
+	        }
+	      }
+	    }
+	
+	    var days_left = endurance / crew;
+	    return days_left;
+	  },
+	
 	  filterItemsByLocation: function filterItemsByLocation(location) {
 	    var filteredItems = this.items.filter(function (item) {
 	      if (item.location == location) {
@@ -20179,6 +20239,19 @@
 	      }
 	    });
 	    return filteredItems;
+	  },
+	
+	  filterItemsByFood: function filterItemsByFood(food) {
+	    if (food != null) {
+	      var filteredItems = this.items.filter(function (item) {
+	        if (item.name == food) {
+	          return item;
+	        }
+	      });
+	      return filteredItems;
+	    } else {
+	      return [];
+	    }
 	  },
 	
 	  liveItems: function liveItems() {
@@ -20197,6 +20270,52 @@
 	      }
 	    });
 	    return usedItems;
+	  },
+	
+	  itemByTypeInfo: function itemByTypeInfo() {
+	    var info = [];
+	    var dryPrice = 0;
+	    var dryEndurance = 0;
+	    var freshPrice = 0;
+	    var freshEndurance = 0;
+	    var frozenPrice = 0;
+	    var frozenEndurance = 0;
+	    var _iteratorNormalCompletion3 = true;
+	    var _didIteratorError3 = false;
+	    var _iteratorError3 = undefined;
+	
+	    try {
+	      for (var _iterator3 = this.items[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	        var item = _step3.value;
+	
+	        if (item.store_type == "Dry") {
+	          dryPrice += item.price;
+	          dryEndurance += item.end_level;
+	        } else if (item.store_type == "Fresh") {
+	          freshPrice += item.price;
+	          freshEndurance += item.end_level;
+	        } else if (item.store_type == "Frozen") {
+	          frozenPrice += item.price;
+	          frozenEndurance += item.end_level;
+	        }
+	      }
+	    } catch (err) {
+	      _didIteratorError3 = true;
+	      _iteratorError3 = err;
+	    } finally {
+	      try {
+	        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	          _iterator3.return();
+	        }
+	      } finally {
+	        if (_didIteratorError3) {
+	          throw _iteratorError3;
+	        }
+	      }
+	    }
+	
+	    var dataObject = [{ name: "Dry", price: dryPrice, end_level: dryEndurance }, { name: "Fresh", price: freshPrice, end_level: freshEndurance }, { name: "Frozen", price: frozenPrice, end_level: frozenEndurance }];
+	    return dataObject;
 	  }
 	
 	};
@@ -35308,16 +35427,94 @@
 	var React = __webpack_require__(1);
 	var Item = __webpack_require__(160);
 	var TotalStores = __webpack_require__(161);
+	var LocationView = __webpack_require__(165);
+	var FoodView = __webpack_require__(166);
 	
-	var AccountContainer = React.createClass({
-	  displayName: 'AccountContainer',
+	var AccountInfo = React.createClass({
+	  displayName: 'AccountInfo',
 	
+	  getInitialState: function getInitialState() {
+	    return { crewNumber: 2, locationView: false, foodView: false };
+	  },
+	
+	  handleCrewChange: function handleCrewChange(e) {
+	    e.preventDefault();
+	    this.setState({ crewNumber: e.target.value });
+	  },
+	
+	  handleFoodButton: function handleFoodButton(e) {
+	    e.preventDefault();
+	    console.log("inside handle food button");
+	    if (this.state.foodView == false) {
+	      this.setState({ foodView: true });
+	      this.setState({ locationView: false });
+	    } else {
+	      this.setState({ foodView: false });
+	    }
+	  },
+	
+	  handleLocationButton: function handleLocationButton(e) {
+	    e.preventDefault();
+	    console.log("inside handle location button");
+	    if (this.state.locationView == false) {
+	      this.setState({ locationView: true });
+	      this.setState({ foodView: false });
+	    } else {
+	      this.setState({ locationView: false });
+	    }
+	  },
+	
+	  createTypeRows: function createTypeRows() {
+	    var that = this;
+	    var liveStores = new TotalStores();
+	    liveStores.items = this.props.liveItems;
+	    var typeArray = liveStores.itemByTypeInfo();
+	    return typeArray.map(function (object) {
+	      return React.createElement(
+	        'tr',
+	        null,
+	        React.createElement(
+	          'td',
+	          null,
+	          object.name
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          '£',
+	          object.price
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          Math.floor(object.end_level / that.state.crewNumber) + 1,
+	          ' Days'
+	        )
+	      );
+	    }); //End of the map
+	  },
 	
 	  render: function render() {
+	
+	    var usedStores = new TotalStores();
+	    usedStores.items = this.props.usedItems;
+	
+	    var liveStores = new TotalStores();
+	    liveStores.items = this.props.liveItems;
 	
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(
+	        'form',
+	        null,
+	        React.createElement(
+	          'label',
+	          { 'for': 'crewNumber', id: 'crewNumber' },
+	          'Enter current Crew Level:'
+	        ),
+	        React.createElement('input', { name: 'crewNumber', type: 'number', value: this.state.crewNumber, onChange: this.handleCrewChange })
+	      ),
 	      React.createElement(
 	        'h1',
 	        null,
@@ -35326,18 +35523,453 @@
 	      React.createElement(
 	        'h2',
 	        null,
-	        'Total Value of Stock:  £',
-	        this.props.value
+	        'Total Value of onboard stores: £',
+	        liveStores.totalValue()
+	      ),
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Total Endurance: ',
+	        Math.floor(liveStores.totalEndurance(this.state.crewNumber)),
+	        ' Days '
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'enduranceTable' },
+	        React.createElement(
+	          'table',
+	          null,
+	          React.createElement(
+	            'thead',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'th',
+	                null,
+	                'Food Type'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Value'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Endurance'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
+	            this.createTypeRows()
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'inspectButtons' },
+	        React.createElement(
+	          'button',
+	          { onClick: this.handleFoodButton },
+	          'See Items By Food'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.handleLocationButton },
+	          'See Items By Location'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'locationFoodChildren' },
+	        this.state.foodView ? React.createElement(FoodView, { foods: this.props.foods, items: this.props.liveItems }) : null,
+	        this.state.locationView ? React.createElement(LocationView, { locations: this.props.locations, items: this.props.liveItems }) : null
 	      )
 	    );
 	  }
 	});
 	
-	module.exports = AccountContainer;
+	module.exports = AccountInfo;
 
 /***/ },
-/* 165 */,
-/* 166 */,
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var Item = __webpack_require__(160);
+	var TotalStores = __webpack_require__(161);
+	var Moment = __webpack_require__(168);
+	
+	var LocationView = React.createClass({
+	  displayName: 'LocationView',
+	
+	  getInitialState: function getInitialState() {
+	    return { selectedLocation: null };
+	  },
+	
+	  createOption: function createOption(location) {
+	    return React.createElement(
+	      'option',
+	      { value: location.name, key: location.id },
+	      location.name,
+	      ', ',
+	      location.store,
+	      ' '
+	    );
+	  },
+	
+	  handleLocationChange: function handleLocationChange(e) {
+	    e.preventDefault();
+	    this.setState({ selectedLocation: e.target.value });
+	  },
+	
+	  buildFoodTableRows: function buildFoodTableRows() {
+	    var that = this;
+	    var filteredStores = new TotalStores();
+	    filteredStores.items = this.props.items;
+	    var filteredItems = filteredStores.filterItemsByLocation(this.state.selectedLocation);
+	
+	    if (filteredItems[0]) {
+	      return filteredItems.map(function (item, index) {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            index + 1
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.name
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            Moment(item.best_before).format("dddd, MMMM Do YYYY")
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.quantity,
+	            ' ',
+	            item.quantity_type
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_by
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_day
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_week
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_year
+	          )
+	        );
+	      }); //End of the map
+	    } else {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            'Non Items in this Location'
+	          )
+	        );
+	      } //End of if
+	  },
+	
+	  render: function render() {
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { id: 'locationSelect' },
+	        React.createElement(
+	          'select',
+	          { id: 'locationDropdown', onChange: this.handleLocationChange },
+	          React.createElement(
+	            'option',
+	            null,
+	            'Select Location'
+	          ),
+	          this.props.locations.map(this.createOption)
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'locationTable' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'See info for --',
+	          this.state.selectedLocation,
+	          ' -- Rack'
+	        ),
+	        React.createElement(
+	          'table',
+	          null,
+	          React.createElement(
+	            'thead',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'th',
+	                null,
+	                'Number'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Item'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Best Before'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Quantity'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onloaded By'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onload Day'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onload Week'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onloaded Year'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
+	            this.buildFoodTableRows()
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = LocationView;
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var Item = __webpack_require__(160);
+	var TotalStores = __webpack_require__(161);
+	var Moment = __webpack_require__(168);
+	
+	var FoodView = React.createClass({
+	  displayName: 'FoodView',
+	
+	  getInitialState: function getInitialState() {
+	    return { selectedFood: null };
+	  },
+	
+	  createOption: function createOption(food) {
+	    return React.createElement(
+	      'option',
+	      { value: food.name, key: food.name },
+	      food.name
+	    );
+	  },
+	
+	  handleFoodChange: function handleFoodChange(e) {
+	    e.preventDefault();
+	    this.setState({ selectedFood: e.target.value });
+	  },
+	
+	  buildFoodTableRows: function buildFoodTableRows() {
+	    var that = this;
+	    var filteredStores = new TotalStores();
+	    filteredStores.items = this.props.items;
+	    var filteredItems = filteredStores.filterItemsByFood(this.state.selectedFood);
+	
+	    if (filteredItems[0]) {
+	      return filteredItems.map(function (item, index) {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            index + 1
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.location
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            Moment(item.best_before).format("dddd, MMMM Do YYYY")
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_by
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_day
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_week
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_year
+	          )
+	        );
+	      }); //End of the map
+	    } else {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            'Non of that Type Loaded'
+	          )
+	        );
+	      } //End of if
+	  },
+	
+	  render: function render() {
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { id: 'foodSelect' },
+	        React.createElement(
+	          'select',
+	          { id: 'foodDropdown', onChange: this.handleFoodChange },
+	          React.createElement(
+	            'option',
+	            null,
+	            'Select Food'
+	          ),
+	          this.props.foods.map(this.createOption)
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'tableByFood' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          'Table Displaying Info on -- ',
+	          this.state.selectedFood
+	        ),
+	        React.createElement(
+	          'table',
+	          null,
+	          React.createElement(
+	            'thead',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'th',
+	                null,
+	                'Number'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Location'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Best Before'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onload By'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onload Day'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onload Week'
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                'Onloaded Year'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
+	            this.buildFoodTableRows()
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = FoodView;
+
+/***/ },
 /* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
