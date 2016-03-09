@@ -14,7 +14,7 @@ TotalStores.prototype = {
       for(var item of this.items){
         value += item.price
       }
-      return 20
+      return value
     },
 
     filterItemsByLocation:function(location){
@@ -24,7 +24,28 @@ TotalStores.prototype = {
         }
       })
       return filteredItems
+    },
+
+    liveItems:function(){
+      var liveItems = this.items.filter(function(item){
+        if(item.offload_by == null){
+          return item
+        }
+      })
+      return liveItems
+    },
+
+    usedItems:function(){
+      var usedItems = this.items.filter(function(item){
+            if(item.offload_by != null){
+              return item
+            }
+          })
+          return usedItems
+        },
+      })
     }
+
 }
 
 module.exports = TotalStores;
