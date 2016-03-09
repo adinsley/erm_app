@@ -20004,15 +20004,24 @@
 	          { id: 'currentState' },
 	          'User: ',
 	          this.state.user,
-	          ' ',
-	          React.createElement('br', null),
+	          ' '
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
 	          ' Year: ',
 	          this.state.year,
-	          ' ',
-	          React.createElement('br', null),
+	          ' '
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
 	          ' Week: ',
-	          this.state.week,
-	          React.createElement('br', null),
+	          this.state.week
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
 	          ' Day: ',
 	          this.state.day
 	        )
@@ -20035,6 +20044,11 @@
 	        'div',
 	        { id: 'session_input' },
 	        React.createElement(
+	          'h2',
+	          null,
+	          'Please Input Your Data for this session'
+	        ),
+	        React.createElement(
 	          'form',
 	          { id: 'session_data_form', onSubmit: this.handleSessionSubmit },
 	          React.createElement(
@@ -20043,11 +20057,10 @@
 	            'Enter User Name:  '
 	          ),
 	          React.createElement('input', { name: 'userName', type: 'text', placeholder: 'Enter User Name', value: this.state.user, onChange: this.handleUserChange }),
-	          React.createElement('br', null),
 	          React.createElement(
 	            'label',
 	            { 'for': 'yearSelect', id: 'yearSelect' },
-	            'Select Year'
+	            'Select Year: '
 	          ),
 	          React.createElement(
 	            'select',
@@ -20055,10 +20068,11 @@
 	            ["2015", "2016", "2017", "2018", "2019", "2020"].map(this.createYearOption)
 	          ),
 	          React.createElement('br', null),
+	          React.createElement('br', null),
 	          React.createElement(
 	            'label',
 	            { 'for': 'weekSelect', id: 'weekSelect' },
-	            'Select Week Number'
+	            'Select Week Number: '
 	          ),
 	          React.createElement(
 	            'select',
@@ -20067,17 +20081,17 @@
 	              return i + 1;
 	            }).map(this.createWeekOption)
 	          ),
-	          React.createElement('br', null),
 	          React.createElement(
 	            'label',
 	            { 'for': 'daySelect', id: 'daySelect' },
-	            'Select Day'
+	            'Select Day: '
 	          ),
 	          React.createElement(
 	            'select',
 	            { name: 'daySelect', id: 'daySelect', onChange: this.handleDayChange },
 	            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(this.createDayOption)
 	          ),
+	          React.createElement('br', null),
 	          React.createElement('br', null),
 	          React.createElement('input', { type: 'submit', value: 'Set Values' })
 	        )
@@ -49127,10 +49141,15 @@
 	
 	    return React.createElement(
 	      'div',
-	      null,
+	      { id: 'addContainer' },
+	      React.createElement(
+	        'h4',
+	        null,
+	        'This section is replicating the function of a scanner when food is onloaded'
+	      ),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.handleSubmit },
+	        { id: 'addForm', onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'select',
 	          { onChange: this.setFood },
@@ -49151,7 +49170,12 @@
 	          ),
 	          this.props.locations.map(this.createLocationOption)
 	        ),
-	        React.createElement('input', { type: 'date', placeholder: 'date', value: moment(this.state.date).format("YYYY[-]MM[-]DD"), onChange: this.setDate }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'bbd' },
+	          'Best Before Date: '
+	        ),
+	        React.createElement('input', { name: 'bbd', type: 'date', placeholder: 'date', value: moment(this.state.date).format("YYYY[-]MM[-]DD"), onChange: this.setDate }),
 	        React.createElement('input', { type: 'submit', value: 'Create Item' })
 	      )
 	    );
@@ -49262,9 +49286,9 @@
 	      'div',
 	      null,
 	      React.createElement(
-	        'h1',
+	        'h4',
 	        null,
-	        'Hello from the use Item Component'
+	        'This section is replicating the function of a scanner when food is used'
 	      ),
 	      React.createElement(
 	        'select',

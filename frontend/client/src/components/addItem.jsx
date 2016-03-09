@@ -51,8 +51,9 @@ var AddItem = React.createClass({
   render: function(){
 
     return(
-      <div>
-        <form onSubmit={this.handleSubmit}>
+      <div id="addContainer">
+        <h4>This section is replicating the function of a scanner when food is onloaded</h4>
+        <form id="addForm" onSubmit={this.handleSubmit}>
            <select onChange={this.setFood}>
                 <option>Select Food</option>
                  {this.props.foods.map(this.createFoodOption)}
@@ -62,8 +63,8 @@ var AddItem = React.createClass({
                 <option>Select Location</option>
                  {this.props.locations.map(this.createLocationOption)}
            </select>
-
-          <input type="date" placeholder="date" value={moment(this.state.date).format("YYYY[-]MM[-]DD")} onChange={this.setDate}></input>
+           <label for="bbd">Best Before Date: </label>
+          <input name="bbd" type="date" placeholder="date" value={moment(this.state.date).format("YYYY[-]MM[-]DD")} onChange={this.setDate}></input>
           
           <input type="submit" value="Create Item" />
         </form>
