@@ -19666,14 +19666,14 @@
 	var Item = __webpack_require__(160);
 	var TotalStores = __webpack_require__(161);
 	var AccountInfo = __webpack_require__(164);
-	var AddItem = __webpack_require__(266);
-	var UseItem = __webpack_require__(267);
+	var AddItem = __webpack_require__(267);
+	var UseItem = __webpack_require__(268);
 	
 	var MainContainer = React.createClass({
 	  displayName: 'MainContainer',
 	
 	  getInitialState: function getInitialState() {
-	    return { items: [], food: [], location: [], user: null, year: "2016", week: "1", day: "Monday", showAddItem: false, showUseItem: false, showAnalyis: false };
+	    return { items: [], food: [], location: [], user: null, year: "2016", week: "1", day: "Monday", showAddItem: false, showUseItem: false, showAnalyis: false, showUserData: true, mainDisplay: false };
 	  },
 	
 	  // Loading the data from the API
@@ -19799,7 +19799,7 @@
 	    this.fetchItems();
 	    this.fetchFoods();
 	    this.fetchLocations();
-	    setInterval(this.fetchItems, 20000);
+	    setInterval(this.fetchItems, 2500);
 	  },
 	
 	  handleItemSubmit: function handleItemSubmit(item) {
@@ -19963,6 +19963,12 @@
 	    console.log(this.state.year + " " + this.state.week + " " + this.state.day + " " + this.state.user);
 	  },
 	
+	  userAdd: function userAdd(e) {
+	    e.preventDefault();
+	    this.setState({ mainDisplay: true });
+	    this.setState({ showUserData: false });
+	  },
+	
 	  // Creating All Options for the Main Data Table
 	  createYearOption: function createYearOption(year) {
 	    return React.createElement(
@@ -20040,7 +20046,7 @@
 	          'This App will allow you to track all of the items that exist in your organisation. You will be able to Add items on arrival and then track when it has been used. From this data you wil then be able to analysis your stock levels and see how you are utilising your stocks.'
 	        )
 	      ),
-	      React.createElement(
+	      this.state.showUserData ? React.createElement(
 	        'div',
 	        { id: 'session_input' },
 	        React.createElement(
@@ -20093,44 +20099,47 @@
 	          ),
 	          React.createElement('br', null),
 	          React.createElement('br', null),
-	          React.createElement('input', { type: 'submit', value: 'Set Values' })
+	          React.createElement('input', { type: 'submit', value: 'Set Values', onClick: this.userAdd })
 	        )
-	      ),
-	      React.createElement(
+	      ) : React.createElement(
 	        'div',
-	        { id: 'action_select' },
+	        { id: 'working_part' },
 	        React.createElement(
-	          'h2',
-	          { id: 'button Title' },
-	          'Select Action'
+	          'div',
+	          { id: 'action_select' },
+	          React.createElement(
+	            'h2',
+	            { id: 'button Title' },
+	            'Select Action'
+	          ),
+	          React.createElement(
+	            'button',
+	            { id: 'addItem', onClick: this.addItemButton },
+	            'Add Item'
+	          ),
+	          React.createElement(
+	            'button',
+	            { id: 'useItem', onClick: this.useItemButton },
+	            'Use Item'
+	          ),
+	          React.createElement(
+	            'button',
+	            { id: 'analyis', onClick: this.useAlButton },
+	            'Analayis Current Stocks'
+	          ),
+	          React.createElement(
+	            'button',
+	            null,
+	            'Build Order'
+	          )
 	        ),
 	        React.createElement(
-	          'button',
-	          { id: 'addItem', onClick: this.addItemButton, value: 'Dogs' },
-	          'Add Item'
-	        ),
-	        React.createElement(
-	          'button',
-	          { id: 'useItem', onClick: this.useItemButton },
-	          'Use Item'
-	        ),
-	        React.createElement(
-	          'button',
-	          { id: 'analyis', onClick: this.useAlButton },
-	          'Analayis Current Stocks'
-	        ),
-	        React.createElement(
-	          'button',
-	          null,
-	          'Build Order'
+	          'div',
+	          { id: 'childViews' },
+	          this.state.showAddItem ? React.createElement(AddItem, { foods: this.state.food, locations: this.state.location, user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, itemSubmit: this.handleItemSubmit }) : null,
+	          this.state.showUseItem ? React.createElement(UseItem, { locations: this.state.location, items: totalStores.liveItems(), user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, useItem: this.handleItemUse }) : null,
+	          this.state.showAnalyis ? React.createElement(AccountInfo, { locations: this.state.location, foods: this.state.food, usedItems: totalStores.usedItems(), liveItems: totalStores.liveItems() }) : null
 	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { id: 'childViews' },
-	        this.state.showAddItem ? React.createElement(AddItem, { foods: this.state.food, locations: this.state.location, user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, itemSubmit: this.handleItemSubmit }) : null,
-	        this.state.showUseItem ? React.createElement(UseItem, { locations: this.state.location, items: totalStores.liveItems(), user: this.state.user, year: this.state.year, week: this.state.week, day: this.state.day, useItem: this.handleItemUse }) : null,
-	        this.state.showAnalyis ? React.createElement(AccountInfo, { locations: this.state.location, foods: this.state.food, usedItems: totalStores.usedItems(), liveItems: totalStores.liveItems() }) : null
 	      )
 	    );
 	  }
@@ -20212,7 +20221,7 @@
 	      }
 	    }
 	
-	    return value;
+	    return Math.floor(value);
 	  },
 	
 	  totalEndurance: function totalEndurance(crew) {
@@ -20328,8 +20337,18 @@
 	      }
 	    }
 	
-	    var dataObject = [{ name: "Dry", price: dryPrice, end_level: dryEndurance }, { name: "Fresh", price: freshPrice, end_level: freshEndurance }, { name: "Frozen", price: frozenPrice, end_level: frozenEndurance }];
+	    var dataObject = [{ name: "Dry", price: Math.floor(dryPrice), end_level: dryEndurance }, { name: "Fresh", price: Math.floor(freshPrice), end_level: freshEndurance }, { name: "Frozen", price: Math.floor(frozenPrice), end_level: frozenEndurance }];
 	    return dataObject;
+	  },
+	
+	  sortbyDate: function sortbyDate(date) {
+	    console.log("In model ==", date);
+	    var filteredDateItems = this.items.filter(function (item) {
+	      if (item.best_before < date) {
+	        return item;
+	      }
+	    });
+	    return filteredDateItems;
 	  }
 	
 	};
@@ -35442,7 +35461,7 @@
 	var Item = __webpack_require__(160);
 	var TotalStores = __webpack_require__(161);
 	var LocationView = __webpack_require__(165);
-	var FoodView = __webpack_require__(265);
+	var FoodView = __webpack_require__(266);
 	
 	var AccountInfo = React.createClass({
 	  displayName: 'AccountInfo',
@@ -35619,12 +35638,13 @@
 	var Item = __webpack_require__(160);
 	var TotalStores = __webpack_require__(161);
 	var Moment = __webpack_require__(166);
+	var BestBefore = __webpack_require__(265);
 	
 	var LocationView = React.createClass({
 	  displayName: 'LocationView',
 	
 	  getInitialState: function getInitialState() {
-	    return { selectedLocation: null };
+	    return { selectedLocation: null, selectedItems: null };
 	  },
 	
 	  createOption: function createOption(location) {
@@ -35713,6 +35733,10 @@
 	
 	  render: function render() {
 	
+	    var filteredStores = new TotalStores();
+	    filteredStores.items = this.props.items;
+	    var filteredItems = filteredStores.filterItemsByLocation(this.state.selectedLocation);
+	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -35796,6 +35820,20 @@
 	            this.buildFoodTableRows()
 	          )
 	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'bbd_button' },
+	        React.createElement(
+	          'button',
+	          { id: 'bbd', onClick: this.handleBestBefore },
+	          'See Best Before Info'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'bbdComponent' },
+	        React.createElement(BestBefore, { locationbbd: filteredItems })
 	      )
 	    );
 	  }
@@ -48901,6 +48939,182 @@
 	var TotalStores = __webpack_require__(161);
 	var Moment = __webpack_require__(166);
 	
+	var BestBefore = React.createClass({
+	  displayName: 'BestBefore',
+	
+	
+	  getInitialState: function getInitialState() {
+	    return { selectedDate: null };
+	  },
+	
+	  handleBbdChange: function handleBbdChange(e) {
+	    e.preventDefault(e);
+	    this.setState({ selectedDate: new Date(e.target.value) });
+	  },
+	
+	  handleMonth: function handleMonth(e) {
+	    var dateNow = Moment();
+	    var month = dateNow.add("Months", 1).toDate();
+	    this.setState({ selectedDate: month });
+	  },
+	
+	  handleWeek: function handleWeek(e) {
+	    var dateNow = Moment();
+	    var week = dateNow.add("Weeks", 1).toDate();
+	    this.setState({ selectedDate: week });
+	  },
+	
+	  handleTomorrow: function handleTomorrow(e) {
+	    var dateNow = Moment();
+	    var tomorrow = dateNow.add("Days", 1).toDate();
+	    this.setState({ selectedDate: tomorrow });
+	  },
+	
+	  bestBeforeTable: function bestBeforeTable() {
+	    var outOfDate = new TotalStores();
+	    outOfDate.items = this.props.locationbbd;
+	    var outofDateItems = outOfDate.sortbyDate(this.state.selectedDate);
+	
+	    if (outofDateItems[0]) {
+	      return outofDateItems.map(function (item, index) {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            item.name
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            Moment(item.best_before).format("dddd, MMMM Do YYYY")
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            Moment(item.best_before).subtract(Moment(new Date())).format("Do")
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_day
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_week
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            item.onload_year
+	          )
+	        );
+	      }); //End of the map
+	    } else {
+	        return React.createElement(
+	          'tr',
+	          null,
+	          React.createElement(
+	            'td',
+	            null,
+	            'No Items Out of Date'
+	          )
+	        );
+	      } //End of if
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { id: 'main_bbd' },
+	      React.createElement(
+	        'form',
+	        null,
+	        React.createElement(
+	          'input',
+	          { type: 'radio', name: 'time', value: 'day', onClick: this.handleTomorrow },
+	          ' By Tomorrow'
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'input',
+	          { type: 'radio', name: 'time', value: 'week', onClick: this.handleWeek },
+	          ' 1 Week From Today'
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'input',
+	          { type: 'radio', name: 'time', value: 'month', onClick: this.handleMonth },
+	          ' 1 Month from Today'
+	        )
+	      ),
+	      React.createElement(
+	        'table',
+	        null,
+	        React.createElement(
+	          'thead',
+	          null,
+	          React.createElement(
+	            'tr',
+	            null,
+	            React.createElement(
+	              'th',
+	              null,
+	              'Item'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Best Before'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Out of Days By'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Onload Day'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Onload Week'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Onloaded Year'
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'tbody',
+	          null,
+	          this.bestBeforeTable()
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = BestBefore;
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var Item = __webpack_require__(160);
+	var TotalStores = __webpack_require__(161);
+	var Moment = __webpack_require__(166);
+	
 	var FoodView = React.createClass({
 	  displayName: 'FoodView',
 	
@@ -49070,7 +49284,7 @@
 	module.exports = FoodView;
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49183,7 +49397,7 @@
 	module.exports = AddItem;
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

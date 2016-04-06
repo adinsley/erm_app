@@ -9,8 +9,8 @@ describe('totalStores Model', function(){
   beforeEach(function(){
     totalStores1 = new TotalStores
     item1 = new Item(1, "Baked Beans", "Deck 1", 4, 2, "Dry", 4, "Kg", new Date("01-01-2001"), "Andrew Insley", "2016", "23", "Thursday", null, null, null, null);
-    item2 = new Item(2, "BeefBurgars", "Deck 2", 10, 4, "Fresh", 4, "Kg", new Date("01-01-2001"), "Andrew Insley", "2016", "23", "Thursday", null, null, null, null);
-    item3 = new Item(2, "Sausages", "Deck 2", 12, 20, "Frozen", 4, "Kg", new Date("01-01-2001"), "Andrew Insley", "2016", "23", "Thursday", "Cora Insley", null, null, null);
+    item2 = new Item(2, "BeefBurgars", "Deck 2", 10, 4, "Fresh", 4, "Kg", new Date("01-06-2001"), "Andrew Insley", "2016", "23", "Thursday", null, null, null, null);
+    item3 = new Item(2, "Sausages", "Deck 2", 12, 20, "Frozen", 4, "Kg", new Date("01-12-2001"), "Andrew Insley", "2016", "23", "Thursday", "Cora Insley", null, null, null);
 
 
 
@@ -99,4 +99,14 @@ it('we can filter data by Food', function(){
   expect(totalStores1.filterItemsByFood("Baked Beans")[0].price).to.equal(4);
 
 });
+//Does the date filter work
+it("we can filter items by date", function(){
+  totalStores1.addItem(item1);
+  totalStores1.addItem(item2);
+  expect(totalStores1.sortbyDate(new Date("01-02-2001"))).to.have.length(1);
+  expect(totalStores1.sortbyDate(new Date("01-02-2001"))[0].name).to.equal("Baked Beans");
+  expect(totalStores1.sortbyDate(new Date("01-08-2001"))).to.have.length(2);
+  expect(totalStores1.sortbyDate(new Date("01-01-2000"))).to.have.length(0);
+
+})
 });

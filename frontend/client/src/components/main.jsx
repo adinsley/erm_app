@@ -9,7 +9,7 @@ var UseItem = require('./useItem.jsx')
 
 var MainContainer = React.createClass({
   getInitialState: function() {
-    return {items: [], food: [], location:[], user:null, year:"2016", week:"1", day:"Monday", showAddItem:false, showUseItem:false, showAnalyis:false};
+    return {items: [], food: [], location:[], user:null, year:"2016", week:"1", day:"Monday", showAddItem:false, showUseItem:false, showAnalyis:false,showUserData:true, mainDisplay:false };
   },
 
   // Loading the data from the API
@@ -73,7 +73,7 @@ var MainContainer = React.createClass({
     this.fetchItems();
     this.fetchFoods();
     this.fetchLocations();
-    setInterval(this.fetchItems, 20000)
+    setInterval(this.fetchItems, 2500)
   },
 
   handleItemSubmit: function(item) {
@@ -196,11 +196,17 @@ var MainContainer = React.createClass({
     console.log(this.state.year + " " + this.state.week + " " + this.state.day + " " + this.state.user )
   },
 
+  userAdd:function(e){
+    e.preventDefault();
+    this.setState({mainDisplay:true});
+    this.setState({showUserData:false});
+  },
+
 
 // Creating All Options for the Main Data Table
   createYearOption:function(year){
         return <option value={year} key={year} >{year} </option>;
-    },
+  },
   createWeekOption:function(week){
     return <option value={week.toString()} key={week} >Week, {week} </option>;
   },
@@ -222,8 +228,8 @@ var MainContainer = React.createClass({
             <p id="welcome_blurb" >This App will allow you to track all of the items that exist in your organisation. You will be able to Add items on arrival and then track when it has been used. From this data you wil then be able to analysis your stock levels and see how you are utilising your stocks.</p>
           </div>
           
+            {this.state.showUserData ? 
           <div id="session_input">
-            
               <h2>Please Input Your Data for this session</h2>
               <form id="session_data_form" onSubmit={this.handleSessionSubmit}>
                 
@@ -247,27 +253,31 @@ var MainContainer = React.createClass({
                 </select>
                 <br/>
                 <br/>
-               <input type="submit" value="Set Values" />
+               <input type="submit" value="Set Values" onClick={this.userAdd} />
               
             
             </form>
           </div>
-
-          <div id="action_select">
+: <div id="working_part">
+        <div id="action_select">
           <h2 id="button Title">Select Action</h2>
-            <button id="addItem" onClick={this.addItemButton} value="Dogs">Add Item</button>
-            <button id="useItem" onClick={this.useItemButton}>Use Item</button>
-            <button id="analyis" onClick={this.useAlButton}>Analayis Current Stocks</button>
-            <button>Build Order</button>
-          </div>
-          <div id="childViews">
-          { this.state.showAddItem ? <AddItem foods={this.state.food} locations={this.state.location} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} itemSubmit={this.handleItemSubmit}/> : null }
+          <button id="addItem" onClick={this.addItemButton}>Add Item</button>
+          <button id="useItem" onClick={this.useItemButton}>Use Item</button>
+          <button id="analyis" onClick={this.useAlButton}>Analayis Current Stocks</button>
+          <button>Build Order</button> 
+        </div>
+        <div id="childViews">
+          {this.state.showAddItem ? <AddItem foods={this.state.food} locations={this.state.location} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} itemSubmit={this.handleItemSubmit}/> : null }
           
           {this.state.showUseItem ? <UseItem locations={this.state.location} items={totalStores.liveItems()} user={this.state.user} year={this.state.year} week={this.state.week} day={this.state.day} useItem={this.handleItemUse} /> : null }
           
           {this.state.showAnalyis ? <AccountInfo locations={this.state.location} foods={this.state.food} usedItems={totalStores.usedItems()} liveItems={totalStores.liveItems()}/> : null}
-          </div>
         </div>
+  </div> }
+
+ 
+</div>
+       
       );
               
   

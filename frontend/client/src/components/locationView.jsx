@@ -2,10 +2,11 @@ var React = require('react');
 var Item = require('../models/item.js')
 var TotalStores = require('../models/totalStores.js')
 var Moment = require('moment')
+var BestBefore = require('./bestBefore1.jsx')
 
 var LocationView = React.createClass({
     getInitialState: function() {
-      return {selectedLocation:null};
+      return {selectedLocation:null, selectedItems:null};
     },
 
     createOption:function(location){
@@ -23,6 +24,7 @@ var LocationView = React.createClass({
         var filteredStores = new TotalStores;
         filteredStores.items = this.props.items;
         var filteredItems = filteredStores.filterItemsByLocation(this.state.selectedLocation);
+
         
         if(filteredItems[0]){
           return filteredItems.map(function(item, index){
@@ -51,6 +53,10 @@ var LocationView = React.createClass({
     },
 
     render: function(){
+
+      var filteredStores = new TotalStores;
+      filteredStores.items = this.props.items;
+      var filteredItems = filteredStores.filterItemsByLocation(this.state.selectedLocation);
   
       return(
         <div>
@@ -79,7 +85,13 @@ var LocationView = React.createClass({
                   {this.buildFoodTableRows()}
               </tbody>
             </table>
-           </div> 
+           </div>
+           <div id="bbd_button">
+              <button id="bbd" onClick={this.handleBestBefore}>See Best Before Info</button>
+           </div>
+           <div id="bbdComponent">
+                <BestBefore locationbbd={filteredItems}/>
+           </div>
 
         </div>
       )

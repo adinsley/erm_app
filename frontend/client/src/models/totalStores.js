@@ -14,7 +14,7 @@ TotalStores.prototype = {
       for(var item of this.items){
         value += item.price
       }
-      return value
+      return Math.floor(value)
     },
 
     totalEndurance: function(crew){
@@ -86,8 +86,18 @@ TotalStores.prototype = {
         frozenEndurance += item.end_level
       }
     }
-      var dataObject = [{name:"Dry", price:dryPrice, end_level:dryEndurance}, {name:"Fresh", price:freshPrice, end_level:freshEndurance}, {name:"Frozen", price:frozenPrice, end_level:frozenEndurance}];
+      var dataObject = [{name:"Dry", price:Math.floor(dryPrice), end_level:dryEndurance}, {name:"Fresh", price:Math.floor(freshPrice), end_level:freshEndurance}, {name:"Frozen", price:Math.floor(frozenPrice), end_level:frozenEndurance}];
       return dataObject;
+  },
+
+  sortbyDate:function(date){
+    console.log("In model ==", date);
+    var filteredDateItems = this.items.filter(function(item){
+      if(item.best_before < date){
+        return item
+      }
+    })
+    return filteredDateItems
   }
 
      
