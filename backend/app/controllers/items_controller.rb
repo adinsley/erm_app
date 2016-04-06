@@ -35,7 +35,7 @@ class ItemsController < ApplicationController
         @item = Item.new(item_params)
         if @item.save
         @items = Item.all
-        render status: 201, :json => @items
+        render status: 201, :json => @item
        
         else
           render status: 404,  json: { message: @item.errors}.to_json
